@@ -1,0 +1,265 @@
+To remove everything from a collection:
+db.<collection name>.remove({})
+
+To insert into a collection:
+db.<collection name>.insert({title:"abc", description:"xyz"});
+
+Find Query(select query):
+db.<collection name>.find().pretty();
+
+To create a database in mongo:
+
+If you want to check your databases list, then use the command 
+show dbs.
+
+If you want to create a database with name <mydb>, then use DATABASEstatement would be as follows:
+>use mydbswitched to db mydb
+
+
+
+Mongo DB
+
+db.getCollection('todos').find({name:'study'})
+
+
+db.todos.find({},{name:'1'})
+
+//The empty brackets are required....
+
+//this doesn't give the required results
+
+db.todos.find({},{})
+//The 1'st set of brackets - for including in result set
+//second set - for exluding from result
+
+
+
+//to fetch only the record satisfying the OR
+db.getCollection('todos').find({$or:[{"name":"study"},{},{}]})  //can give multiple conditions in {} brackets
+
+
+//To sort in reverse order on the basis of name
+db.getCollection('todos').find().sort({name:-1})
+
+//for pagination
+db.getCollection('todos').find().limit(3)
+
+
+//to find all records with desc containing 'h'
+db.todos.find({description:{$regex:'h'}})  
+
+//starting with h
+db.todos.find({description:{$regex:'^h'}})
+
+
+
+//
+db.todos.insert({name:'name1',address:{city:'Nagpur',country:'India'},lang:['English','Hindi','Marathi']})
+
+
+//for embedded documents
+//key.nested_key
+db.todos.find({'address.city':'Nagpur'}).pretty()
+
+
+To update:
+Eg: db.Test.update({},{$set:{lang:"HIndi"}})
+
+
+//to update multiple records
+db.todos.update({name:{$in:['5','dghdg']}},{$set:{name:'new_name',city:'hello',description:'hjhjj'}},{multi:true})
+
+
+//Multi only works with the $ operators hence $set is required.
+
+//$unset - to remove the existing field from the document
+
+
+//$push adds the particular field in the record returned.
+db.todos.update({name:{$in:['study','fgfgfg']}},{$push:{address:{city:'hello',country:'World'}}},{multi:true})
+
+
+//$addToSet
+db.todos.update({name:'name1'},{$addToSet:{lang:'Sindhi'}},{multi:true})
+/*adds a value 'Sindhi' to a current existing set
+if the set 'lang' is not present, it wil create a new field with the value/values given.   */
+
+
+//assign result to a variable
+var doc=db.todos.find({name:'name1'})
+
+
+var do1=db.todos.find().toArray()
+printjson(do1[1])
+
+
+Update for multiple records:
+$set update key
+$unset -remove key
+$push - addToSet
+$inc increments the value field
+
+Aggregation
+Allows u to fire some aggregate query
+find some min value, average value etc.
+
+Allows us to create pipe line (taking result from previous one and supplying it to next as input)
+$match ->filtering
+$sort ->sorting
+$project ->to select fields for projection
+$skip ->skipping documents
+$limit-> limiting
+$group -> u can specify key on which u want to do grouping
+
+Operations
+$sum : finding total   $sum:1 (count)
+                                      $sum:"$Key" (total of values)
+$avg
+$min
+$max
+$push
+
+$group  -> u can specify key on which u want to do grouping
+
+Eg:
+1) db.Test.aggregate([{$group:{_id:'$name',count:{$sum : 1}}}])
+
+2) db.Test.aggregate([{$group:{_id:'$name',totalsalary:{$sum :'$age'}}}])-- gives total age based on name(so here u are grouping on name)
+
+3) db.Test.aggregate([{$group:{_id:'$name',tot:{$sum:'$age'}}}])
+
+$match --filtering the data on the basis of something and then u can apply group eg:
+
+1) db.Test.aggregate([{$match:{name:'Tom'}},{$group:{_id:'$name',tot:{$sum:'$age'}}}])
+
+Sort eg:
+db.Test.aggregate([{$group:{_id:'$name',tot:{$sum:1}}},{$sort:{'name':1}}])
+
+Here $sum:1 will give count of records which are matching
+o/p:
+/* 1 */
+{
+    "_id" : "Tom",
+    "tot" : 2
+}
+
+/* 2 */
+{
+    "_id" : "Ram",
+    "tot" : 1
+}
+
+/* 3 */
+{
+    "_id" : "Dipti",
+    "tot" : 1
+}
+
+
+db.Test.aggregate([{$group:{_id:'$name',tot:{$sum:'$age'}}}])
+o/p
+
+/* 1 */
+{
+    "_id" : "Tom",
+    "tot" : 58
+}
+
+/* 2 */
+{
+    "_id" : "Ram",
+    "tot" : 31
+}
+
+/* 3 */
+{
+    "_id" : "Dipti",
+    "tot" : 23
+}
+
+db.Test.aggregate([{$group:{_id:'$name',tot:{$sum:'$age'}}},{$sort:{'_id':1}}])
+o/p
+/* 1 */
+{
+    "_id" : "Dipti",
+    "tot" : 23
+}
+
+/* 2 */
+{
+    "_id" : "Ram",
+    "tot" : 31
+}
+
+/* 3 */
+{
+    "_id" : "Tom",
+    "tot" : 58
+}
+
+db.Test.aggregate([{$group:{_id:'$name',tot:{$sum:'$age'}}},{$sort:{'_id':-1}}])
+
+/* 1 */
+{
+    "_id" : "Tom",
+    "tot" : 58
+}
+
+/* 2 */
+{
+    "_id" : "Ram",
+    "tot" : 31
+}
+
+/* 3 */
+{
+    "_id" : "Dipti",
+    "tot" : 23
+}
+
+db.Test.aggregate([{$match:{name:'Tom'}},{$sort:{'_id':1}}])
+/* 1 */
+{
+    "_id" : ObjectId("5837ca98ac5b902b7561f853"),
+    "name" : "Tom",
+    "age" : 32,
+    "salary" : "2000"
+}
+
+/* 2 */
+{
+    "_id" : ObjectId("5837cac5ac5b902b7561f856"),
+    "name" : "Tom",
+    "age" : 26,
+    "salary" : "1000"
+}
+
+$project -> to select fields for projection($project:select and $match: is similar to where)
+
+Only name:
+db.Test.aggregate([{$project:{name:1}}])
+
+Those name and age whose name is Tom
+db.Test.aggregate([{$project:{name:1,age:1}},{$match:{name:'Tom'}}])
+
+Index
+U can create indexes in mongo db
+Capped Collection
+
+Cannot delete records from capped collection ,it is a circular queue type collection.
+When u create a collection 
+createCollection(name,"size") if size exceeds then also records get inserted by rewritting the previous one
+
+Sharding:
+Scale out
+It will allow u to create multiple clusters 
+
+
+
+
+
+
+
+
+
+
