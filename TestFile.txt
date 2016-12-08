@@ -1,0 +1,33 @@
+Hi Himanshu,
+
+We received 1 file for LiveVox Daily Import on IBC HCR PROD server. Please find details below:
+File Name	No. of Records	Comment
+IBC_LiveVox_Results_12032016_29833211_Sales.txt	2366	File looks good
+
+
+We have loaded the file with proper data. Please find the details below:
+
+FileName : /home/bconnected/bc3_import/IBC_Reform/LiveVoxDailyResultLoad/IBC_LiveVox_Results_12032016_29833211_Sales.txt
+Total Record: 2366
+Success Record: 2296
+Record Rejected: 70
+
+Error File: /home/bconnected/bc3_import/IBC_Reform/LiveVoxDailyResultLoad/error_IBC_LiveVox_Results_12032016_29833211_Sales.txt.processed
+
+
+We generated the “Daily Transaction” and “Notes” extract. Please find details below:
+
+Daily Transaction Extract Location:
+1) /home/bconnected/bc3_export/IBC_Reform/DailyTransactionFeed/IBC_AHNJ_Daily_Transaction_File_12032016.txt
+2) /home/bconnected/bc3_export/IBC_Reform/DailyTransactionFeed/IBC_AHNJ_Daily_Transaction_File_12042016.txt
+
+Notes Extract Location:
+1) /home/bconnected/bc3_export/IBC_Reform/NoteExtract/Note_Extract_12032016.txt
+2) /home/bconnected/bc3_export/IBC_Reform/NoteExtract/Note_Extract_12042016.txt
+
+For Information: As touchpoints created by LiveVox Daily Result load are of date 12/03 and 12/04, we have manually generated the Daily Transaction Feed extract and Note extract for dates 12/03 and 12/04.
+
+Please let us know if more information is required.
+
+Thanks and Regards,
+Dipti Salgia
